@@ -1,0 +1,15 @@
+{
+  "name": "dev-tinder",
+  "version": "1.0.0",
+  "description": "This is used for developers to connect ",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "author": "Saran Karthik",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
