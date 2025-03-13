@@ -7,16 +7,18 @@ const app = express();
 
 // this is the request handler function.
 
-app.use("/test", (req, res) => {
-  res.send("Test handled");
-});
-
-app.use("/hello", (req, res) => {
-  res.send("Hello handled");
-});
-app.use("/", (req, res) => {
-  res.send("Global");
-});
+app.use(
+  "/test",[
+  (req, res) => {
+    res.send("Hello from route handler 1");
+  },
+  (req, res) => {
+    res.send("From route handler 2");
+  }],
+  (req, res, next) => {
+    res.send("From route handler3");
+  }
+);
 
 // server listenes to the port which is mentioned here.
 app.listen(3000, () => {
