@@ -7,18 +7,18 @@ const app = express();
 
 // this is the request handler function.
 
-app.use(
-  "/test",[
-  (req, res) => {
-    res.send("Hello from route handler 1");
-  },
-  (req, res) => {
-    res.send("From route handler 2");
-  }],
-  (req, res, next) => {
-    res.send("From route handler3");
+// usage of middleware for all the routes. 
+app.use("/", (req, res, next) => {
+  let token = "xyz";
+  if (token!="abc") {
+    res.status(401).send("Unauthorized request");
   }
-);
+  next();
+});
+
+app.get("/test", (req, res) => {
+  res.status(200).send("Data retrived");
+});
 
 // server listenes to the port which is mentioned here.
 app.listen(3000, () => {
