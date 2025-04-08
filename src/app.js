@@ -5,16 +5,12 @@ const express = require("express");
 
 const app = express();
 
+const {adminAuth} = require("./middlewares/auth");
+
 // this is the request handler function.
 
 // usage of middleware for all the routes. 
-app.use("/", (req, res, next) => {
-  let token = "xyz";
-  if (token!="abc") {
-    res.status(401).send("Unauthorized request");
-  }
-  next();
-});
+app.use("/test", adminAuth);
 
 app.get("/test", (req, res) => {
   res.status(200).send("Data retrived");
