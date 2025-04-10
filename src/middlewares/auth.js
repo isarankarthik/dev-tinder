@@ -8,6 +8,15 @@ const adminAuth = (req, res, next) => {
     next();
 }
 
+const userAuth = (req, res, next) => {
+  let token = "abc";
+  if (token!="abc") {
+    res.status(401).send("Unauthorized request");
+  }
+  next();
+}
+
 module.exports = {
     adminAuth,
+    userAuth
 }
