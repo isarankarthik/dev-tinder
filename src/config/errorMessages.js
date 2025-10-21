@@ -6,7 +6,8 @@ module.exports = {
         individualUser : "Failed to get the user. Please try again",
         databaseConnection : "An error occurred while connecting to the database. Please check the logs.",
         noUser : "No user found. Please check the information.",
-        deleteUser : "Failed to delete the user. Please try again."
+        deleteUser : "Failed to delete the user. Please try again.",
+        updateUser : "Failed to update user information. Please try again."
     },
     
 }

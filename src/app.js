@@ -87,6 +87,24 @@ app.delete("/delete-user", async (req, res) => {
   }
 });
 
+// update the user. 
+
+app.patch("/user", async (req, res) => {
+  try {
+    let {userId, age} = req.body;
+    // let result = await User.findByIdAndUpdate(userId, {age : age});
+    // the above one can also be done using : 
+    let result = await User.updateOne({_id : userId}, {$set : {age : age}});
+    if (!result) {
+      return res.status(422).send(errorMessages.user.updateUser);
+    }
+    return res.status(200).send(successMessages.user.updateUser)
+  } catch (err) {
+    console.error(err);
+    return res.status(422).send(errorMessages.user.updateUser);
+  }
+})
+
 connectDB().then(() => {
   console.log("DB connection is successful");
   // server listenes to the port which is mentioned here.
