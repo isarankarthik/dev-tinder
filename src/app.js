@@ -1,6 +1,8 @@
 // Importing express in our application
 const express = require("express");
 const connectDB = require("./config/databse");
+const errorMessages = require("./config/errorMessages");
+const successMessages = require("./config/successMessages");
 
 const User = require("./models/user");
 
@@ -15,10 +17,10 @@ app.post("/signup", async(req, res) => {
   // creation of new instance of the user model. 
   const user = new User(req.body);
   await user.save();
-  res.status(200).send("User Created Successfully");
+  res.status(200).send(successMessages.user.createUser);
   } catch (err) {
     console.error(err);
-    res.status(422).send("Failed to create user.");
+    res.status(422).send(errorMessages.user.createUser);
   }
 });
 
@@ -33,7 +35,7 @@ app.get("/feed", async(req, res) => {
     return res.status(200).json(users);
   } catch (err) {
     console.error(err);
-    return res.status(422).send("Failed to get the users. Please try again");
+    return res.status(422).send(errorMessages.user.feedUser);
   }
 });
 
@@ -42,18 +44,18 @@ app.get("/user/:email", async(req, res) => {
     // let userEmail = req.query.email;
     let userEmail = req.params?.email;
     if (!userEmail) {
-      return res.status(422).send("email is missing");
+      return res.status(422).send(errorMessages.user.missingEmail);
     }
 
     let users = await User.find({email : userEmail});
     if (!users || users.length == 0) {
       console.error("Users are not available");
-      return res.status(422).send("Failed to get the users.");
+      return res.status(422).send(errorMessages.user.individualUser);
     }
     return res.status(200).json(users);
   } catch (err) {
     console.error(err);
-    return res.status(422).send("Failed to get the users. Please try again");
+    return res.status(422).send(errorMessages.user.individualUser);
   }
 })
 
@@ -64,8 +66,8 @@ app.listen(3000, () => {
   console.log("Server is successfully running on the port 3000");
 });
 
-}).catch(() => {
-  console.error("an error occurred while connecting to database.");
+}).catch((err) => {
+  console.error(err);
 });
 
 
