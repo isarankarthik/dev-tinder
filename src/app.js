@@ -71,7 +71,21 @@ app.get("/getUserById", async (req, res) => {
     console.error(err);
     return res.status(422).send(errorMessages.user.individualUser);
   }
-})
+});
+
+app.delete("/delete-user", async (req, res) => {
+  try {
+    let userId = req.body.userId;
+    let response = await User.findByIdAndDelete({_id : userId});
+    if (!response) {
+      return res.status(422).send(errorMessages.user.deleteUser);
+    }
+    return res.status(200).send("User deleted successfully");
+  } catch (err) {
+    console.error(err);
+    return res.status(422).send(errorMessages.user.deleteUser);
+  }
+});
 
 connectDB().then(() => {
   console.log("DB connection is successful");

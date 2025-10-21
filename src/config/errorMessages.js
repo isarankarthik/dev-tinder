@@ -5,7 +5,8 @@ module.exports = {
         feedUser : "Failed to get the users. Please try again.",
         individualUser : "Failed to get the user. Please try again",
         databaseConnection : "An error occurred while connecting to the database. Please check the logs.",
-        noUser : "No user found. Please check the information."
+        noUser : "No user found. Please check the information.",
+        deleteUser : "Failed to delete the user. Please try again."
     },
     
 }
