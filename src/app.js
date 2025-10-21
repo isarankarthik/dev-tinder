@@ -7,29 +7,19 @@ const User = require("./models/user");
 // creation of the instance of the web application.
 
 const app = express();
-
+// usage of json middleware. JSON middleware converts the data from JSON to javascript object.
+app.use(express.json());
 app.post("/signup", async(req, res) => {
   try {
-  const userObject = {
-    firstName : "Kane",
-    lastName : "Willamson",
-    username : "kane_s_w",
-    password : "kanekiwi",
-    email : "kanekiwi@nz.com",
-    age : 35,
-    gender : "Male"
-  }
-
   // creation of new instance of the user model. 
-  const user = new User(userObject);
-
+  const user = new User(req.body);
   await user.save();
-  res.sendStatus(200);
+  res.status(200).send("User Created Successfully");
   } catch (err) {
     console.error(err);
     res.status(422).send("Failed to create user.");
   }
-})
+});
 
 connectDB().then(() => {
   console.log("DB connection is successful");
