@@ -39,20 +39,34 @@ app.get("/feed", async(req, res) => {
   }
 });
 
-app.get("/user/:email", async(req, res) => {
+app.get("/user", async(req, res) => {
   try {
-    // let userEmail = req.query.email;
-    let userEmail = req.params?.email;
+    let userEmail = req.body.email;
     if (!userEmail) {
       return res.status(422).send(errorMessages.user.missingEmail);
     }
 
-    let users = await User.find({email : userEmail});
+    let users = await User.findOne({});
     if (!users || users.length == 0) {
       console.error("Users are not available");
-      return res.status(422).send(errorMessages.user.individualUser);
+      return res.status(422).send(errorMessages.user.noUser);
     }
     return res.status(200).json(users);
+  } catch (err) {
+    console.error(err);
+    return res.status(422).send(errorMessages.user.individualUser);
+  }
+});
+
+app.get("/getUserById", async (req, res) => {
+  try {
+    let userId = req.body.userId;
+
+    let userData = await User.findById(userId);
+    if (!userData) {
+      return res.status(200).send("User does not exist");
+    }
+    return res.status(200).json(userData);
   } catch (err) {
     console.error(err);
     return res.status(422).send(errorMessages.user.individualUser);
