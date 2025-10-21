@@ -10,6 +10,7 @@
   "author": "Saran Karthik",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "mongoose": "^8.19.1",
     "nodemon": "^3.1.10"
