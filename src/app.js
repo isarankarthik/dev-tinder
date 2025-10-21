@@ -1,40 +1,45 @@
 // Importing express in our application
 const express = require("express");
+const connectDB = require("./config/databse");
+
+const User = require("./models/user");
 
 // creation of the instance of the web application.
 
 const app = express();
 
-const {adminAuth, userAuth} = require("./middlewares/auth");
-
-// this is the request handler function.
-
-// usage of middleware for all the routes. 
-app.use("/test", adminAuth);
-app.use("/user", userAuth);
-
-app.get("/test", (req, res) => {
+app.post("/signup", async(req, res) => {
   try {
-    throw new Error("Someting went wrong");
-    res.send("Hello Test");
-  } catch (err) {
-    res.status(422).send(err.message);
+  const userObject = {
+    firstName : "Kane",
+    lastName : "Willamson",
+    username : "kane_s_w",
+    password : "kanekiwi",
+    email : "kanekiwi@nz.com",
+    age : 35,
+    gender : "Male"
   }
-  
-});
 
-app.get("/user", (req, res) => {
-  res.status(200).send("Hello User");
-});
+  // creation of new instance of the user model. 
+  const user = new User(userObject);
 
-// error handling 
-app.use("/", (err, req, res,next) => {
-  if (err) {
-    res.status(422).send("Something went wrong");
+  await user.save();
+  res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.status(422).send("Failed to create user.");
   }
 })
 
-// server listenes to the port which is mentioned here.
+connectDB().then(() => {
+  console.log("DB connection is successful");
+  // server listenes to the port which is mentioned here.
 app.listen(3000, () => {
   console.log("Server is successfully running on the port 3000");
 });
+
+}).catch(() => {
+  console.error("an error occurred while connecting to database.");
+});
+
+
