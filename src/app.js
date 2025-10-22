@@ -94,7 +94,11 @@ app.patch("/user", async (req, res) => {
     let {userId, ...updateFields} = req.body;
     // let result = await User.findByIdAndUpdate(userId, {age : age});
     // the above one can also be done using : 
-    let result = await User.updateOne({_id : userId}, {$set : {...updateFields}});
+    let result = await User.updateOne(
+      {_id : userId}, 
+      {$set : {...updateFields}},
+      {runValidators : true}
+    );
     if (!result) {
       return res.status(422).send(errorMessages.user.updateUser);
     }
