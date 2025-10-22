@@ -3,7 +3,7 @@ const express = require("express");
 const connectDB = require("./config/databse");
 const errorMessages = require("./config/errorMessages");
 const successMessages = require("./config/successMessages");
-
+const {emailRegex} = require("./constants/regex");
 const User = require("./models/user");
 
 // creation of the instance of the web application.
@@ -15,6 +15,26 @@ app.use(express.json());
 app.post("/signup", async(req, res) => {
   try {
   // creation of new instance of the user model. 
+  let {...userInput} = req.body;
+  let trimmedName = userInput?.firstName.trim();
+  if (!trimmedName ||trimmedName.length == 0) {
+    return res.status(422).send(errorMessages.user.firstName);
+  }
+  if (!userInput?.email || !emailRegex.test(userInput?.email)) {
+    return res.status(422).send(errorMessages.user.invalidEmail);
+  }
+
+  let trimmedPassword = userInput?.password.trim();
+  if (!trimmedPassword || trimmedPassword.length == 0) {
+    return res.status(422).send(errorMessages.user.emptyPassword);
+  }
+
+  
+  // check whether the email is a valid one. 
+  if (userInput?.skills.length > 10) {
+    return res.status(422).send(errorMessages.user.moreSkills);
+  }
+
   const user = new User(req.body);
   await user.save();
   res.status(200).send(successMessages.user.createUser);
@@ -101,6 +121,24 @@ app.delete("/delete-user", async (req, res) => {
 app.patch("/user", async (req, res) => {
   try {
     let {userId, ...updateFields} = req.body;
+    const ALLOWED_UPDATES = [
+      "about", "skills", "age", "gender","userId"
+    ];
+
+    const isUpdateAllowed = Object.keys(req.body).every((key) => {
+      return ALLOWED_UPDATES.includes(key)
+    });
+
+    console.log(isUpdateAllowed);
+
+    if (!isUpdateAllowed) {
+      throw new Error("Update is not allowed");
+    }
+
+    if (updateFields?.skills.length > 10) {
+      return res.status(422).send(errorMessages.user.moreSkills);
+    }
+
     // let result = await User.findByIdAndUpdate(userId, {age : age});
     // the above one can also be done using : 
     let result = await User.updateOne(
@@ -114,7 +152,7 @@ app.patch("/user", async (req, res) => {
     return res.status(200).send(successMessages.user.updateUser)
   } catch (err) {
     console.error(err);
-    return res.status(422).send(errorMessages.user.updateUser);
+    return res.status(422).send("Update failed" + err.message);
   }
 });
 

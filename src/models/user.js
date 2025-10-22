@@ -49,7 +49,16 @@ const userSchema = new mongoose.Schema({
         default : "I am a developer"
     },
     skills : {
-        type : [String]
+        type : [String],
+        validate(value) {
+            const isValid = value.every((key) => typeof key === 'string' && key.length > 0);
+            if (!isValid) {
+                throw new Error("Invalid skills");
+            }
+            if (value.length > 10) {
+                throw new Error ("Number of skills cannot be more than 10");
+            }
+        }
     },
     status : {
         type : String, 
