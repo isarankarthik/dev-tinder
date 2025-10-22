@@ -27,7 +27,7 @@ app.post("/signup", async(req, res) => {
 // feed api -> this lists all the users in the application.
 app.get("/feed", async(req, res) => {
   try {
-    let users = await User.find({});
+    let users = await User.find({is_deleted : false, status : "active"});
     if (!users || users.length == 0) {
       console.error("No users available");
       return res.status(422).send("Failed to get the users");
@@ -76,7 +76,16 @@ app.get("/getUserById", async (req, res) => {
 app.delete("/delete-user", async (req, res) => {
   try {
     let userId = req.body.userId;
-    let response = await User.findByIdAndDelete({_id : userId});
+    let response = await User.updateOne(
+      {_id : userId},
+      {
+        $set : {
+          is_deleted : true,
+          status : "inactive",
+          deleted_at : new Date()
+        }
+      }
+    );
     if (!response) {
       return res.status(422).send(errorMessages.user.deleteUser);
     }
