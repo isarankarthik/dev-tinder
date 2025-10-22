@@ -3,25 +3,52 @@ const mongoose = require("mongoose");
 // the attributes are similar to the columns in the mysql which we have.
 const userSchema = new mongoose.Schema({
     firstName : {
-        type : String
+        type : String,
+        required : true,
+        minLength : 5
     },
     lastName : {
         type : String
     },
+    // the unique true and the required true are the validations from the mongo db.
     username : {
-        type : String
+        type : String,
+        required : true,
+        unique:true,
     },
     email : {
-        type : String
+        type : String,
+        required : true,
+        unique: true,
+        lowercase : true,
+        trim : true
     },
     password : {
-        type : String
+        type : String,
+        required : true
     },
     age : {
-        type : Number
+        type : Number,
+        required : true
     },
     gender : {
-        type : String
+        type : String,
+        required : true,
+        validate(value) {
+            if (!["male", "female", "others"].includes(value)) {
+                throw new Error("Gender is not valid");
+            }
+        }
+    },
+    photoUrl : {
+        type: String
+    },
+    about : {
+        type: String,
+        default : "I am a developer"
+    },
+    skills : {
+        type : [String]
     }
 });
 

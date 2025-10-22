@@ -91,10 +91,10 @@ app.delete("/delete-user", async (req, res) => {
 
 app.patch("/user", async (req, res) => {
   try {
-    let {userId, age} = req.body;
+    let {userId, ...updateFields} = req.body;
     // let result = await User.findByIdAndUpdate(userId, {age : age});
     // the above one can also be done using : 
-    let result = await User.updateOne({_id : userId}, {$set : {age : age}});
+    let result = await User.updateOne({_id : userId}, {$set : {...updateFields}});
     if (!result) {
       return res.status(422).send(errorMessages.user.updateUser);
     }
@@ -103,7 +103,7 @@ app.patch("/user", async (req, res) => {
     console.error(err);
     return res.status(422).send(errorMessages.user.updateUser);
   }
-})
+});
 
 connectDB().then(() => {
   console.log("DB connection is successful");
