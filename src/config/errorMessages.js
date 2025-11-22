@@ -1,4 +1,4 @@
-module.exports = {
+const errorMessages = {
     user : {
         missingEmail : "Email is missing.",
         invalidEmail : "Invalid email",
@@ -15,3 +15,5 @@ module.exports = {
     },
     
 }
+
+export default errorMessages;

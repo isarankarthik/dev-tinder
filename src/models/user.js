@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-var validator = require("validator");
+import mongoose from "mongoose";
+import validator from "validator"
 
 // the attributes are similar to the columns in the mysql which we have.
 const userSchema = new mongoose.Schema({
@@ -86,4 +86,4 @@ const userSchema = new mongoose.Schema({
 // model is something which is used to connect with the database.
 const User = mongoose.model("User", userSchema);
 
-module.exports = User;
+export default User;

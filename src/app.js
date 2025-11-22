@@ -1,12 +1,11 @@
 // Importing express in our application
-const express = require("express");
-const connectDB = require("./config/databse");
-const errorMessages = require("./config/errorMessages");
-const successMessages = require("./config/successMessages");
-const {emailRegex} = require("./constants/regex");
-const User = require("./models/user");
-var validator = require("validator");
-
+import express from "express"
+import connectDB from "./config/databse.js"
+import errorMessages from "./config/errorMessages.js"
+import successMessages from "./config/successMessages.js"
+import emailRegex from "./constants/regex.js"
+import User from "./models/user.js"
+import validator from "validator"
 // creation of the instance of the web application.
 
 const app = express();
