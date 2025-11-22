@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+var validator = require("validator");
 
 // the attributes are similar to the columns in the mysql which we have.
 const userSchema = new mongoose.Schema({
@@ -21,7 +22,12 @@ const userSchema = new mongoose.Schema({
         required : true,
         unique: true,
         lowercase : true,
-        trim : true
+        trim : true,
+        validate(value) {
+            if (!validator.isEmail(value)) {
+                throw new Error("Invalid email");
+            }
+        }
     },
     password : {
         type : String,
@@ -77,6 +83,7 @@ const userSchema = new mongoose.Schema({
     timestamps:true
 });
 
+// model is something which is used to connect with the database.
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

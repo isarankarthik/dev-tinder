@@ -5,6 +5,7 @@ const errorMessages = require("./config/errorMessages");
 const successMessages = require("./config/successMessages");
 const {emailRegex} = require("./constants/regex");
 const User = require("./models/user");
+var validator = require("validator");
 
 // creation of the instance of the web application.
 
@@ -15,12 +16,15 @@ app.use(express.json());
 app.post("/signup", async(req, res) => {
   try {
   // creation of new instance of the user model. 
+  // destructing the req.body 
   let {...userInput} = req.body;
   let trimmedName = userInput?.firstName.trim();
   if (!trimmedName ||trimmedName.length == 0) {
     return res.status(422).send(errorMessages.user.firstName);
   }
-  if (!userInput?.email || !emailRegex.test(userInput?.email)) {
+  
+  // check whether the email is a valid one. 
+  if (!userInput?.email || !validator.isEmail(userInput?.email)) {
     return res.status(422).send(errorMessages.user.invalidEmail);
   }
 
@@ -29,8 +33,7 @@ app.post("/signup", async(req, res) => {
     return res.status(422).send(errorMessages.user.emptyPassword);
   }
 
-  
-  // check whether the email is a valid one. 
+  // check if the number of skills is more than 10 or not.
   if (userInput?.skills.length > 10) {
     return res.status(422).send(errorMessages.user.moreSkills);
   }
@@ -50,7 +53,7 @@ app.get("/feed", async(req, res) => {
     let users = await User.find({is_deleted : false, status : "active"});
     if (!users || users.length == 0) {
       console.error("No users available");
-      return res.status(422).send("Failed to get the users");
+      return res.status(422).send("No users available.");
     }
     return res.status(200).json(users);
   } catch (err) {
@@ -59,6 +62,7 @@ app.get("/feed", async(req, res) => {
   }
 });
 
+// getting the user by the email.
 app.get("/user", async(req, res) => {
   try {
     let userEmail = req.body.email;
@@ -66,7 +70,7 @@ app.get("/user", async(req, res) => {
       return res.status(422).send(errorMessages.user.missingEmail);
     }
 
-    let users = await User.findOne({});
+    let users = await User.findOne({'email' : userEmail});
     if (!users || users.length == 0) {
       console.error("Users are not available");
       return res.status(422).send(errorMessages.user.noUser);
@@ -128,8 +132,6 @@ app.patch("/user", async (req, res) => {
     const isUpdateAllowed = Object.keys(req.body).every((key) => {
       return ALLOWED_UPDATES.includes(key)
     });
-
-    console.log(isUpdateAllowed);
 
     if (!isUpdateAllowed) {
       throw new Error("Update is not allowed");
